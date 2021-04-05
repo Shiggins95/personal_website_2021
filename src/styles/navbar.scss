@@ -1,0 +1,27 @@
+.navigation {
+  width: 100vw;
+  height: 10vh;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  .logo-name {
+    grid-column: 3 / 6;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .links {
+    grid-column: 8 / 11;
+    ul {
+      height: 100%;
+      align-items: center;
+      justify-items: flex-end;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      li {
+        list-style-type: none;
+        cursor: pointer;
+      }
+    }
+  }
+}
