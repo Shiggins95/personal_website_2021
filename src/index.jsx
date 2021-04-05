@@ -1,15 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { gsap } from 'gsap/all';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-  gsap.core.globals('ScrollTrigger', ScrollTrigger);
-}
 ReactDOM.render(
   <React.StrictMode>
     <App />

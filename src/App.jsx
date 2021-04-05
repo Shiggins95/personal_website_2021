@@ -1,100 +1,57 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useRef, useState } from 'react';
+import { gsap, Power2 } from 'gsap/all';
+import ScrollTrigger from 'gsap/ScrollTrigger';
 import './App.scss';
-import {
-  gsap, Power2, Power3,
-} from 'gsap/all';
-import * as _ from 'lodash';
 import Section from './components/section';
 import useWindowSize from './hooks/useWindowSize';
+import NavBar from './components/navbar';
 
 const images = ['/laptop1.jpg', '/laptop2.jpg', '/laptop3.jpg'];
 
 function App() {
-  const loadingDiv = useRef();
-  const triggerRef = useRef();
-  const contentContainer = useRef();
-  const rightLanding = useRef();
-  const leftLanding = useRef();
-  const mounted = useRef(false);
-  const appContainer = useRef();
   const scrollContainer = useRef();
-  const prevY = useRef(10);
-  const index = useRef(0);
-  const isScrolling = useRef(false);
-  const canScroll = useRef(true);
+  const appContainer = useRef();
+  const loadingDiv = useRef();
+  const contentContainer = useRef();
+  const leftLanding = useRef();
+  const rightLanding = useRef();
+  const sectionOne = useRef();
+  const sectionTwo = useRef();
+  const landingContainer = useRef();
+  const headlineRef = useRef();
+  const nameRef = useRef();
+  const subHeadlineRef = useRef();
+  const buttonRef = useRef();
   const { height } = useWindowSize();
-  const setIndex = (value) => {
-    index.current = value;
-  };
-  const setIsScrolling = (value) => {
-    isScrolling.current = value;
-  };
-
-  const goToSection = () => {
-    const newY = index.current * height;
-    window.scrollTo(0, newY);
+  const currentY = useRef(0);
+  const onScroll = () => {
+    const { pageYOffset } = window;
     gsap.to(scrollContainer.current, {
-      translateY: `-${newY}px`,
-      duration: 0.75,
-      onComplete: () => {
-        setIsScrolling(false);
-        prevY.current = window.pageYOffset;
-      },
-      ease: Power3.easeIn,
+      translateY: `-${currentY.current || pageYOffset}px`,
+      delay: 0.01,
     });
   };
 
-  const handleScroll = () => {
-    if (!mounted.current) {
-      return;
-    }
-    const { pageYOffset } = window;
-    if (!isScrolling.current && canScroll.current) {
-      setIsScrolling(true);
-      let direction = prevY.current <= pageYOffset || pageYOffset < 10 ? 'down' : 'up';
-      if (index.current > 0 && pageYOffset === 0) {
-        direction = 'up';
-      }
-      if (direction === 'down') {
-        if (index.current < images.length - 1) {
-          setIndex(index.current + 1);
-        }
-      } else if (index.current > 0) {
-        setIndex(index.current - 1);
-      }
-      goToSection(index.current);
-    }
-  };
-
-  const mouseWheel = () => {
-    const shouldScrollUp = index.current > 0 && prevY.current <= 10;
-    const shouldScrollDown = index.current < images.length - 1
-        && (prevY.current >= images.length - 1) * height;
-    if (shouldScrollUp || shouldScrollDown) {
-      handleScroll();
-    }
-  };
-
-  useEffect(() => {
-    console.log('1');
-    const throttled = _.throttle(handleScroll, 1500, { trailing: false, leading: true });
-    const throttled2 = _.throttle(mouseWheel, 1500, { trailing: false, leading: true });
-    window.addEventListener('scroll', throttled);
-    window.addEventListener('mousewheel', throttled2);
+  const setupScroller = () => {
+    gsap.registerPlugin(ScrollTrigger);
     document.body.style.height = `${scrollContainer.current.getBoundingClientRect().height}px`;
-    setTimeout(() => {
-      mounted.current = true;
-    }, 250);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('mousewheel', mouseWheel);
-      index.current = 0;
-      prevY.current = 10;
-    };
-  }, []);
+    window.addEventListener('scroll', onScroll);
+  };
 
-  useEffect(() => {
+  const removeScroller = () => {
+    window.removeEventListener('scroll', onScroll);
+  };
+
+  const goToProjects = () => {
+    window.scrollTo(0, height * 2);
+    gsap.to(scrollContainer.current, {
+      translateY: `-${height * 2}px`,
+      duration: 1.5,
+    });
+  };
+
+  const setupAnimations = () => {
     gsap.to([loadingDiv.current], {
       height: 0,
       duration: 1,
@@ -104,39 +61,75 @@ function App() {
     gsap.to(contentContainer.current, {
       position: 'unset',
     });
-    gsap.from(leftLanding.current, {
-      x: '-100vw',
-      duration: 1,
-      opacity: 0,
-      delay: 1,
-    });
     gsap.from(rightLanding.current, {
       x: '100vw',
       duration: 1,
       opacity: 0,
       delay: 1,
+      ease: Power2.easeInOut,
     });
+    gsap.from(leftLanding.current, {
+      x: '-100vw',
+      duration: 1,
+      opacity: 0,
+      delay: 1,
+      ease: Power2.easeInOut,
+    });
+    gsap.from(nameRef.current, {
+      y: -50,
+      duration: 0.5,
+      opacity: 0,
+      delay: 2,
+    });
+    gsap.from(subHeadlineRef.current, {
+      y: -50,
+      duration: 0.5,
+      opacity: 0,
+      delay: 2.25,
+    });
+    gsap.from(headlineRef.current, {
+      y: -50,
+      duration: 0.5,
+      opacity: 0,
+      delay: 2.5,
+    });
+    gsap.from(buttonRef.current, {
+      opacity: 0,
+      duration: 0.5,
+      delay: 2.75,
+    });
+  };
+
+  useEffect(() => {
+    setupScroller();
+    setupAnimations();
+    return removeScroller;
   }, []);
 
   return (
     <div className="App" ref={appContainer}>
+      <NavBar />
       <div className="scroll" ref={scrollContainer}>
         <div id="loading-page" ref={loadingDiv}>
           {/* loading page */}
         </div>
         <div id="content" ref={contentContainer}>
-          <div className="landing section">
+          <div className="landing section" ref={landingContainer}>
             <div className="left" ref={leftLanding}>
-              left
+              <h2 ref={nameRef}>Hi, I&apos;m Stephen</h2>
+              <h2 ref={subHeadlineRef}>Front End Developer</h2>
+              <h1 ref={headlineRef}>I build beautiful web experiences</h1>
+              <button type="button" onClick={goToProjects} ref={buttonRef}>
+                Projects
+              </button>
             </div>
             <div className="right" ref={rightLanding}>
               right
             </div>
           </div>
+          <Section img={images[0]} className="first" reactRef={sectionOne} />
+          <Section img={images[2]} reactRef={sectionTwo} />
         </div>
-        <br />
-        <Section img={images[1]} className="first" reactRef={triggerRef} />
-        <Section img={images[2]} />
       </div>
     </div>
   );

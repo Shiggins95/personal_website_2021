@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Section = ({ img, className }) => (
-  <div className={`section ${className}`}>
-    <div className="trigger1" style={{ position: 'absolute', top: 200 }}>trigger1</div>
+const Section = ({ img, className, reactRef }) => (
+  <div className={`section ${className}`} ref={reactRef}>
     <h1>{img.replace(/(\/|.jpg)/gm, '')}</h1>
     <img src={img} alt="laptop" />
   </div>
@@ -12,9 +11,12 @@ const Section = ({ img, className }) => (
 Section.propTypes = {
   img: PropTypes.string.isRequired,
   className: PropTypes.string,
+  // eslint-disable-next-line react/forbid-prop-types
+  reactRef: PropTypes.object,
 };
 Section.defaultProps = {
   className: '',
+  reactRef: null,
 };
 
 export default Section;
