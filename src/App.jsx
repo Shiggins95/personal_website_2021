@@ -3,9 +3,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { gsap, Power2 } from 'gsap/all';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import './App.scss';
+import { act } from '@testing-library/react';
 import Section from './components/section';
 import useWindowSize from './hooks/useWindowSize';
 import NavBar from './components/navbar';
+import ContactForm from './components/contactForm';
 
 const images = ['/laptop1.jpg', '/laptop2.jpg', '/laptop3.jpg'];
 
@@ -24,6 +26,7 @@ function App() {
   const subHeadlineRef = useRef();
   const buttonRef = useRef();
   const { height } = useWindowSize();
+  const navbarRef = useRef();
   const currentY = useRef(0);
   const onScroll = () => {
     const { pageYOffset } = window;
@@ -57,6 +60,16 @@ function App() {
       duration: 1,
       ease: Power2.easeIn,
       display: 'none',
+    });
+    gsap.to(navbarRef.current.querySelectorAll('li'), {
+      color: 'white',
+      duration: 0.25,
+      delay: 0.85,
+    });
+    gsap.to(navbarRef.current, {
+      background: 'black',
+      duration: 0,
+      delay: 0.75,
     });
     gsap.to(contentContainer.current, {
       position: 'unset',
@@ -98,6 +111,12 @@ function App() {
       duration: 0.5,
       delay: 2.75,
     });
+    gsap.to(sectionOne.current, {
+      background: 'black',
+      scrub: 1,
+      duration: 1,
+      scrollTrigger: sectionOne.current,
+    });
   };
 
   useEffect(() => {
@@ -108,7 +127,7 @@ function App() {
 
   return (
     <div className="App" ref={appContainer}>
-      <NavBar />
+      <NavBar navbarRef={navbarRef} />
       <div className="scroll" ref={scrollContainer}>
         <div id="loading-page" ref={loadingDiv}>
           {/* loading page */}
@@ -124,7 +143,13 @@ function App() {
               </button>
             </div>
             <div className="right" ref={rightLanding}>
-              right
+              <div className="watermark">
+                <h1>
+                  CONTACT
+                </h1>
+              </div>
+              <div className="white-block" />
+              <ContactForm />
             </div>
           </div>
           <Section img={images[0]} className="first" reactRef={sectionOne} />

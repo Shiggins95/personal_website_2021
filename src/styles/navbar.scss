@@ -3,14 +3,25 @@
   height: 10vh;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
+  position: fixed;
+  z-index: 101;
   .logo-name {
-    grid-column: 3 / 6;
+    cursor: pointer;
+    grid-column: 1 / 7;
     height: 100%;
-    display: flex;
-    justify-content: flex-start;
+    display: grid;
+    grid-row: 1/ 2;
+    grid-template-columns: repeat(6, 1fr);
     align-items: center;
+    z-index: 101;
+    color: white;
+    p {
+      grid-column: 3 / 7;
+    }
   }
   .links {
+    z-index: 98;
+    grid-row: 1/ 2;
     grid-column: 8 / 11;
     ul {
       height: 100%;

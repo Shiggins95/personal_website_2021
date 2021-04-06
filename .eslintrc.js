@@ -19,5 +19,7 @@ module.exports = {
     'prettier',
   ],
   rules: {
+    'jsx-a11y/label-has-associated-control': 'off',
+    'react/forbid-prop-types': 'off',
   },
 };
