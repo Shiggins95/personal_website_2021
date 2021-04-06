@@ -1,11 +1,11 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import '../styles/navbar.scss';
 
-const NavBar = () => {
+const NavBar = ({ navbarRef }) => {
   console.log('navbar');
   return (
-    <div className="navigation">
+    <div className="navigation" ref={navbarRef}>
       <div className="logo-name">
         <p>Stephen Higgins</p>
       </div>
@@ -20,6 +20,9 @@ const NavBar = () => {
   );
 };
 
-NavBar.propTypes = {};
+NavBar.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  navbarRef: PropTypes.object.isRequired,
+};
 
 export default NavBar;
