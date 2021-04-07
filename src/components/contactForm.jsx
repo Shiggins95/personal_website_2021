@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars */
 import React, { useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import { gsap } from 'gsap/all';
 
 const startingValues = {
@@ -8,7 +10,7 @@ const startingValues = {
   content: '',
 };
 
-const ContactForm = () => {
+const ContactForm = ({ displayMessage }) => {
   const [values, setValues] = useState(startingValues);
   const labelRefs = {
     name: useRef(),
@@ -41,7 +43,7 @@ const ContactForm = () => {
     });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     console.log('VALUES: ', values);
     const validation = {};
@@ -57,11 +59,28 @@ const ContactForm = () => {
     });
     console.log('NEW MISSING', validation);
     setMissingValues({ ...missingValues, ...validation });
-    if (missingValue) {
+    // if (missingValue) {
+    //   return;
+    // }
+
+    const emailRequest = await fetch('http://localhost:8080/api/send_email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ...values }),
+    });
+
+    const { error, message } = await emailRequest.json();
+
+    if (error) {
+      displayMessage({ error, message });
       return;
     }
 
-    setValues({ ...startingValues });
+    displayMessage({ error: false });
+
+    // setValues({ ...startingValues });
   };
 
   return (
@@ -144,6 +163,8 @@ const ContactForm = () => {
   );
 };
 
-ContactForm.propTypes = {};
+ContactForm.propTypes = {
+  displayMessage: PropTypes.func.isRequired,
+};
 
 export default ContactForm;

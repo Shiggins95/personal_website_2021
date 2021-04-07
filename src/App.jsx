@@ -28,6 +28,31 @@ function App() {
   const { height } = useWindowSize();
   const navbarRef = useRef();
   const currentY = useRef(0);
+  const successRef = useRef();
+  const errorRef = useRef();
+
+  const [{ error, message }, setError] = useState({ error: false, message: '' });
+  const [success, setSuccess] = useState(false);
+
+  const displayMessage = (newState) => {
+    const animationOptions = {
+      x: '100%',
+      duration: 0.5,
+      opacity: 0,
+    };
+    if (newState.error === true) {
+      setError(newState);
+      gsap.from(errorRef.current, animationOptions);
+    } else {
+      setSuccess(true);
+      gsap.from(successRef.current, animationOptions);
+    }
+    setTimeout(() => {
+      setError({ error: false, message: '' });
+      setSuccess(false);
+    }, 5000);
+  };
+
   const onScroll = () => {
     const { pageYOffset } = window;
     gsap.to(scrollContainer.current, {
@@ -149,7 +174,23 @@ function App() {
                 </h1>
               </div>
               <div className="white-block" />
-              <ContactForm />
+              {error && (
+              <div
+                ref={errorRef}
+                className="white-block error-block"
+              >
+                <p>{message}</p>
+              </div>
+              )}
+              {success && (
+              <div
+                ref={successRef}
+                className="white-block success-block"
+              >
+                <p>Thank you for your email!</p>
+              </div>
+              )}
+              <ContactForm displayMessage={displayMessage} />
             </div>
           </div>
           <Section img={images[0]} className="first" reactRef={sectionOne} />
