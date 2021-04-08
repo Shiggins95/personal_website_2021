@@ -193,7 +193,6 @@ function App() {
               <ContactForm displayMessage={displayMessage} />
             </div>
           </div>
-          <Section img={images[0]} className="first" reactRef={sectionOne} />
           <Section img={images[2]} reactRef={sectionTwo} />
         </div>
       </div>
