@@ -10,6 +10,13 @@ const startingValues = {
   content: '',
 };
 
+const startingLabels = {
+  name: false,
+  email: false,
+  subject: false,
+  content: false,
+};
+
 const ContactForm = ({ displayMessage }) => {
   const [values, setValues] = useState(startingValues);
   const labelRefs = {
@@ -18,12 +25,7 @@ const ContactForm = ({ displayMessage }) => {
     subject: useRef(),
     content: useRef(),
   };
-  const [clickedLabels, setClickedLabels] = useState({
-    name: false,
-    email: false,
-    subject: false,
-    content: false,
-  });
+  const [clickedLabels, setClickedLabels] = useState(startingLabels);
   const [missingValues, setMissingValues] = useState({
     name: false,
     email: false,
@@ -80,7 +82,8 @@ const ContactForm = ({ displayMessage }) => {
 
     displayMessage({ error: false });
 
-    // setValues({ ...startingValues });
+    setValues({ ...startingValues });
+    setClickedLabels({ ...startingLabels });
   };
 
   return (

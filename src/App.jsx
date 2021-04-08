@@ -136,12 +136,6 @@ function App() {
       duration: 0.5,
       delay: 2.75,
     });
-    gsap.to(sectionOne.current, {
-      background: 'black',
-      scrub: 1,
-      duration: 1,
-      scrollTrigger: sectionOne.current,
-    });
   };
 
   useEffect(() => {
@@ -164,7 +158,7 @@ function App() {
               <h2 ref={subHeadlineRef}>Front End Developer</h2>
               <h1 ref={headlineRef}>I build beautiful web experiences</h1>
               <button type="button" onClick={goToProjects} ref={buttonRef}>
-                Projects
+                My Projects
               </button>
             </div>
             <div className="right" ref={rightLanding}>
@@ -193,7 +187,9 @@ function App() {
               <ContactForm displayMessage={displayMessage} />
             </div>
           </div>
-          <Section img={images[0]} className="first" reactRef={sectionOne} />
+          <div id="about">
+            about
+          </div>
           <Section img={images[2]} reactRef={sectionTwo} />
         </div>
       </div>
