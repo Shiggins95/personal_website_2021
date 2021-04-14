@@ -6,7 +6,7 @@ import '../styles/navbar.scss';
 const NavBar = ({
   navbarRef, goToSection, goToContacts,
 }) => {
-  console.log('navbar');
+  console.log('navbars');
   return (
     <div className="navigation" ref={navbarRef}>
       <div className="logo-name">
