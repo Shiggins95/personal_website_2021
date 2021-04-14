@@ -45,6 +45,13 @@ const ContactForm = ({ displayMessage, contactRef }) => {
     });
   };
 
+  const handleFocus = () => {
+    if (clickedLabels.name) {
+      return;
+    }
+    showLabel('name');
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log('VALUES: ', values);
@@ -100,6 +107,7 @@ const ContactForm = ({ displayMessage, contactRef }) => {
           placeholder={clickedLabels.name ? '' : 'Name'}
           onChange={(event) => setValues({ ...values, name: event.target.value })}
           ref={contactRef}
+          onFocus={handleFocus}
         />
       </div>
       <div className="email input">

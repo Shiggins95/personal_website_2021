@@ -14,9 +14,9 @@ const NavBar = ({
       </div>
       <div className="links">
         <ul>
+          <li onClick={goToContacts}>Contact</li>
           <li onClick={() => goToSection(1)}>About</li>
           <li onClick={() => goToSection(2)}>Projects</li>
-          <li onClick={goToContacts}>Contact</li>
         </ul>
       </div>
     </div>
