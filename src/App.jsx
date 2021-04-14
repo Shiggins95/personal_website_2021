@@ -3,11 +3,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { gsap, Power2 } from 'gsap/all';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import './App.scss';
-import { act } from '@testing-library/react';
 import Section from './components/section';
 import useWindowSize from './hooks/useWindowSize';
 import NavBar from './components/navbar';
 import ContactForm from './components/contactForm';
+import useScrolling from './helpers/useScrolling';
 
 const images = ['/laptop1.jpg', '/laptop2.jpg', '/laptop3.jpg'];
 
@@ -30,6 +30,10 @@ function App() {
   const currentY = useRef(0);
   const successRef = useRef();
   const errorRef = useRef();
+  const autoScrolling = useRef(false);
+  const contactInputRef = useRef();
+  const setAutoScrolling = (value) => { autoScrolling.current = value; };
+  const { isScrolling, scrollTo } = useScrolling();
 
   const [{ error, message }, setError] = useState({ error: false, message: '' });
   const [success, setSuccess] = useState(false);
@@ -53,6 +57,20 @@ function App() {
     }, 5000);
   };
 
+  const goToSection = async (index) => {
+    await scrollTo(scrollContainer, index, true);
+  };
+
+  const goToContact = async () => {
+    const { pageYOffset } = window;
+    if (pageYOffset === 0) {
+      contactInputRef.current.focus();
+      return;
+    }
+    await scrollTo(scrollContainer, 0, true);
+    contactInputRef.current.focus();
+  };
+
   const onScroll = () => {
     const { pageYOffset } = window;
     gsap.to(scrollContainer.current, {
@@ -69,14 +87,6 @@ function App() {
 
   const removeScroller = () => {
     window.removeEventListener('scroll', onScroll);
-  };
-
-  const goToProjects = () => {
-    window.scrollTo(0, height * 2);
-    gsap.to(scrollContainer.current, {
-      translateY: `-${height * 2}px`,
-      duration: 1.5,
-    });
   };
 
   const setupAnimations = () => {
@@ -146,7 +156,11 @@ function App() {
 
   return (
     <div className="App" ref={appContainer}>
-      <NavBar navbarRef={navbarRef} />
+      <NavBar
+        navbarRef={navbarRef}
+        goToSection={goToSection}
+        goToContacts={goToContact}
+      />
       <div className="scroll" ref={scrollContainer}>
         <div id="loading-page" ref={loadingDiv}>
           {/* loading page */}
@@ -157,7 +171,7 @@ function App() {
               <h2 ref={nameRef}>Hi, I&apos;m Stephen</h2>
               <h2 ref={subHeadlineRef}>Front End Developer</h2>
               <h1 ref={headlineRef}>I build beautiful web experiences</h1>
-              <button type="button" onClick={goToProjects} ref={buttonRef}>
+              <button type="button" onClick={() => goToSection(2)} ref={buttonRef}>
                 My Projects
               </button>
             </div>
@@ -184,7 +198,7 @@ function App() {
                 <p>Thank you for your email!</p>
               </div>
               )}
-              <ContactForm displayMessage={displayMessage} />
+              <ContactForm displayMessage={displayMessage} contactRef={contactInputRef} />
             </div>
           </div>
           <div id="about">

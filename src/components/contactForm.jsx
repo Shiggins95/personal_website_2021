@@ -17,7 +17,7 @@ const startingLabels = {
   content: false,
 };
 
-const ContactForm = ({ displayMessage }) => {
+const ContactForm = ({ displayMessage, contactRef }) => {
   const [values, setValues] = useState(startingValues);
   const labelRefs = {
     name: useRef(),
@@ -61,9 +61,9 @@ const ContactForm = ({ displayMessage }) => {
     });
     console.log('NEW MISSING', validation);
     setMissingValues({ ...missingValues, ...validation });
-    // if (missingValue) {
-    //   return;
-    // }
+    if (missingValue) {
+      return;
+    }
 
     const emailRequest = await fetch('http://localhost:8080/api/send_email', {
       method: 'POST',
@@ -99,6 +99,7 @@ const ContactForm = ({ displayMessage }) => {
           onClick={() => showLabel('name')}
           placeholder={clickedLabels.name ? '' : 'Name'}
           onChange={(event) => setValues({ ...values, name: event.target.value })}
+          ref={contactRef}
         />
       </div>
       <div className="email input">
@@ -168,6 +169,7 @@ const ContactForm = ({ displayMessage }) => {
 
 ContactForm.propTypes = {
   displayMessage: PropTypes.func.isRequired,
+  contactRef: PropTypes.object.isRequired,
 };
 
 export default ContactForm;
