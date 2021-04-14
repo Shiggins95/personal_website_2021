@@ -8,6 +8,8 @@ import useWindowSize from './hooks/useWindowSize';
 import NavBar from './components/navbar';
 import ContactForm from './components/contactForm';
 import useScrolling from './helpers/useScrolling';
+import LeftHero from './components/leftHero';
+import RightHero from './components/rightHero';
 
 const images = ['/laptop1.jpg', '/laptop2.jpg', '/laptop3.jpg'];
 
@@ -18,44 +20,18 @@ function App() {
   const contentContainer = useRef();
   const leftLanding = useRef();
   const rightLanding = useRef();
-  const sectionOne = useRef();
   const sectionTwo = useRef();
   const landingContainer = useRef();
   const headlineRef = useRef();
   const nameRef = useRef();
   const subHeadlineRef = useRef();
   const buttonRef = useRef();
-  const { height } = useWindowSize();
   const navbarRef = useRef();
   const currentY = useRef(0);
   const successRef = useRef();
   const errorRef = useRef();
-  const autoScrolling = useRef(false);
   const contactInputRef = useRef();
-  const setAutoScrolling = (value) => { autoScrolling.current = value; };
-  const { isScrolling, scrollTo } = useScrolling();
-
-  const [{ error, message }, setError] = useState({ error: false, message: '' });
-  const [success, setSuccess] = useState(false);
-
-  const displayMessage = (newState) => {
-    const animationOptions = {
-      x: '100%',
-      duration: 0.5,
-      opacity: 0,
-    };
-    if (newState.error === true) {
-      setError(newState);
-      gsap.from(errorRef.current, animationOptions);
-    } else {
-      setSuccess(true);
-      gsap.from(successRef.current, animationOptions);
-    }
-    setTimeout(() => {
-      setError({ error: false, message: '' });
-      setSuccess(false);
-    }, 5000);
-  };
+  const { scrollTo } = useScrolling();
 
   const goToSection = async (index) => {
     await scrollTo(scrollContainer, index, true);
@@ -167,39 +143,20 @@ function App() {
         </div>
         <div id="content" ref={contentContainer}>
           <div className="landing section" ref={landingContainer}>
-            <div className="left" ref={leftLanding}>
-              <h2 ref={nameRef}>Hi, I&apos;m Stephen</h2>
-              <h2 ref={subHeadlineRef}>Front End Developer</h2>
-              <h1 ref={headlineRef}>I build beautiful web experiences</h1>
-              <button type="button" onClick={() => goToSection(2)} ref={buttonRef}>
-                My Projects
-              </button>
-            </div>
-            <div className="right" ref={rightLanding}>
-              <div className="watermark">
-                <h1>
-                  CONTACT
-                </h1>
-              </div>
-              <div className="white-block" />
-              {error && (
-              <div
-                ref={errorRef}
-                className="white-block error-block"
-              >
-                <p>{message}</p>
-              </div>
-              )}
-              {success && (
-              <div
-                ref={successRef}
-                className="white-block success-block"
-              >
-                <p>Thank you for your email!</p>
-              </div>
-              )}
-              <ContactForm displayMessage={displayMessage} contactRef={contactInputRef} />
-            </div>
+            <LeftHero
+              goToSection={goToSection}
+              subHeadlineRef={subHeadlineRef}
+              nameRef={nameRef}
+              containerRef={leftLanding}
+              headlineRef={headlineRef}
+              buttonRef={buttonRef}
+            />
+            <RightHero
+              successRef={successRef}
+              containerRef={rightLanding}
+              contactInputRef={contactInputRef}
+              errorRef={errorRef}
+            />
           </div>
           <div id="about">
             about
